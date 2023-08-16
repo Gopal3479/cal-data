@@ -1,0 +1,427 @@
+Rename database
+'alter Database DataBaseName modify Name=NewDataBaseName'
+alternatively use can also change using system designed stored procedure
+
+Execute sp_renameDB 'OldDatabaseName','NewDatabaseName'
+
+Drop Database in Sql Server
+----------------------------
+-when you drop the database internally delete LDF and MDF files 
+-you can't drop a database when it is in use 
+- if other users are connected to your database, then first you need to put the database in single-user mode and then drop the database
+ Alter Database DatabaseName Set SINGLE_USER With Rollback Immediate 
+
+-With Rollback Immediate option, it will rollback all incomplete transactions and closes the connection to the database
+---------------------------------------------------------------
+creating,altering and deleting tables
+
+Sql sub languages 
+
+1.DDL (5 commands- create, alter, sp_rename, drop, truncate)
+2.DML (3 commands- Insert, Update, Delete).
+3.DQL/ DRL (1 command- select).
+4.TCL (3 commands- commit, rollback, savepoint).
+5.DCL (2 commands- Grant, Revoke).
+-----------------------------------------------------------------
+DDL(Data Defination Language)
+-it used to define database objects such as tables,synonyms,views,procedures,functions,triggers,etc
+-DDL commonds are working on structure ,not on table of data
+
+create
+------
+The CREATE command is used to create a new database object in a database such as tables, views, functions, etc
+In SQL Server, all database objects (tables, views, etc) are saved with an extension of “dbo.<object name>”.
+
+CREATE TABLE <TABLE NAME>
+(
+<COLUMN NAME1> <DATA TYPE> [SIZE],
+<COLUMN NAME2> <DATA TYPE> [SIZE],
+)
+
+Alter
+------
+-this command used to modify or change the structure of the table
+
+ALTER-ALTER COLUMN
+this command used to change the datatype from old datatype to new data type and also change the size of the data type of the coulumn
+
+ALTER TABLE <TABLE NAME> ALTER COLUMN <COLUMN NAME> <NEW DATA TYPE>[NEW SIZE]
+
+change the width of a column
+varchar(50)--->varchar(100)
+ALTER TABLE STUDENT ALTER COLUMN NAME VARCHAR(100)
+
+Changing the data type of an existing column.
+ALTER TABLE Student ALTER COLUMN Name NVARCHAR(100)
+
+Changing the column NULL to NOT NULL.
+ALTER TABLE Student ALTER COLUMN No INT NOT NULL 
+
+Changing NOT NULL to NULL.
+ALTER TABLE Student ALTER COLUMN No INT NULL
+--------------------------------------------------------------------------------------
+Adding a new column to an existing table in SQL Server:
+ALTER TABLE <TABLENAME> ADD <NEWCOLUMNNAME> <DATA TYPE>[NEW SIZE]
+
+Suppose, you want to add the Branch column to the existing Student table.
+ALTER TABLE Student ADD Branch VARCHAR(20) 
+
+Deleting Column in SQL Server:
+ALTER TABLE <TABLENAME> DROP COLUMN <COLUMNNAME>
+
+if you want to delete or drop the Brach column from the Student table,
+ALTER TABLE Student DROP COLUMN Branch
+
+SP_RENAME Command in SQL Server:
+SP stands for the stored procedure and here SP_RENAME is a system-defined stored procedure. This stored procedure is used to change the column name
+SP_RENAME ‘<TABLE NAME>.<OLD COLUMN NAME>’, ‘NEW COLUMN NAME’
+
+Suppose, you want to change the name column from Name to StudentName, then you need to use this stored procedure as shown below.
+SP_RENAME ‘Student.Name’, ‘StudentName‘
+
+Truncate Command in SQL Server:
+Whenever you want to delete all the records or rows from a table without any condition, then you need to use the Truncate command
+TRUNCATE TABLE <TABLENAME>
+
+Drop Command in SQL Server:
+If you want to delete the table from the database, then you need to use the DROP command
+DROP TABLE <OBJECT NAME>
+
+----------------------------------------------------------------------------------
+Sql Server Data types
+Data Types are the attribute that specifies what types of data entered by the user such as integer, character, decimal, date time, etc.
+
+Sql data types
+1.Integer data types :
+	these datatypes are classified into 4 types based on range and memory size.
+	TinyInt--1Byte
+	SmallInt---2byte
+	Int ----4 byte
+	BigInt ---8byte
+2.Decimal data types
+	these data type allows only decimal point values only.
+	these decimal type contains 2 types
+	1.Decimal(P,S)
+	2.Numeric (P,S)
+	-but both are same ,here p reperesent precision and s represent scale and default value of the decimal data type is Decimal(18,0) and also for Numeric(18,0)	
+3.Money / currency data types
+	this data type is used to accept currency format values into a table column
+	money data type consist of 2 types
+	SmallMoney----4 bytes
+	Money -------8 bytes
+4.Date and Time data types
+	date and time datatype is used to store a perticular date and time information.
+	Date:this is accept date in the format information only.the default format of the date type is 'YYYY/MM/DD'
+	Time: this allows in the format 'hh:mm:ss:ms'
+	DateTime: 'YYYY/MM/DD hh:mm:ss.ms'
+	
+5.Character data types
+	Character data types are allowed characters and integer format values
+	1.Non Unicode data types: char (Size), varchar (size/max), Text
+	2.Unicode data types: nchar(size), nvarchar(size), ntext
+6.Binary data types
+	These data types are used to store image files, audio files, and video files into a database location.
+	binary data type classified into 3 types
+	Binary(size): it is a fixed length data type and store the data in binary format(1,0)
+	Varbinary(size/max):it is a variable length data type and will store information in the binary format.
+		it will store data upto 2GB
+	Boolean type: it will holds the boolean values it provides a bit data type that takes of 1,0,NULL
+
+  
+7.Special data types
+	Sql_varient data type:it will support all data types except text,ntext,and image data.
+	X Sql_varient
+	101 Pkr 32.68 13579 22/12/2112 101000110
+	
+	XML data type: it used to store XML file information 
+	
+	SQL Server Cursor Data Type:
+	cursor is an object data type that will allocate a reference memory on the server-side for storing information.
+	
+	Time Datatype in SQL Server:
+	-it exposes automatically generated unique binary numbers within a database.
+	-size of time stamp database is 8 bytes.
+	-we generally use this timestamp on the columnn of a row to determine whether any data in the row has been changed since tha last time it was read.
+
+	Unique identifier
+	- we can intialize this by using the newid().
+	-GUID values are uniquely identified in database that means it is going to be unique within a database.
+
+--------------------------------------------------------------
+Contraints in Sql
+=================
+Sql server constraints are mainly used to maintain data integrity 
+Why do we need:
+sql constraints are used to restrict the unwanted data in any columns
+
+there are different types of Sql Constraints:
+1.Default constraint 
+2.Unique constraints 
+3.Not NUll constraints 
+4.check key constraints
+5.Primary key Constraints 
+6.Foreign key constraints 
+
+NULL in SQL Server:
+null represents the obsence of data or value,its neither Zero nor Empty
+
+ 
+Default Constraint 
+==================
+it is used to fill the columns with a default value that is used to defined during the creation of the table if the user does not supply any value while inserting the data.
+
+CREATE TABLE Employee (
+    ID int NOT NULL,
+    LastName varchar(255) NOT NULL,
+    FirstName varchar(255),
+    Age int,
+    City varchar(255) DEFAULT 'Mumbai',
+    DateOfBirth date DEFAULT GETDATE(),
+    Salary   DECIMAL (18, 2) DEFAULT 5000.00
+)
+
+ we created the City, DateOfBirth, and Salary columns with the Default Constraint. So, while inserting the data into the Employee table, if the user does not specify the values for City, DateOfBirth, and Salary columns, then the default values we specified here are going to be stored in the store City, DateOfBirth, and Salary columns.
+
+Not Null Constraint
+when you want a column not to accept NULL then you need to apply the NOT NUll constraint to the column.
+
+CREATE TABLE customer 
+( 
+    id    INT NOT NULL, 
+    name  VARCHAR(30) NOT NULL, 
+    mobno CHAR(10) NOT NULL 
+)
+
+UNIQUE Constraint 
+column or columns not accept any duplicate values then you nedd to apply UNIQUE COnstraints to that columns .
+
+Syntax: CREATE TABLE<TABLE NAME>(<COLUMN NAME><DATA TYPE><CONSTRAINTKEY>……)
+
+CREATE TABLE Customer 
+( 
+    Id      INT UNIQUE, 
+    NAME    VARCHAR(30) UNIQUE, 
+    Emailid VARCHAR(100) UNIQUE 
+)
+
+Unique constraints accept only 1 NULL Value.
+===============================================================
+
+
+Primary Key Constraints 
+Primary key in sql is a combination of Unique and Not NULL Constraint 
+A table contains only 1 primary key which can be either a single or multiple columns 
+
+CREATE TABLE Branches 
+( 
+    Bcode INT PRIMARY KEY, 
+    Bname VARCHAR(40), 
+    Bloc  CHAR(40) 
+) 
+
+Composite Primary key
+In Sql the primary key constraints on more than one columns and we do so ,it is called composite
+maximum number of columns is including in composite primary key is 16 columns
+In a composite primary key, each column can accept duplicate values but the duplicate combination should not be duplicated.
+
+CREATE TABLE BranchDetails 
+( 
+    City  VARCHAR(40), 
+    Bcode INT, 
+    Bloc  VARCHAR(30), 
+    PRIMARY KEY(City, Bcode) 
+) 
+
+Primary key is also called a candidate key 
+
+when do we choose primary key.
+when we need following feature on a column
+1. NULLs Should not be allowd
+2. it should be unique
+3.it can not be modified
+
+primary key creates a unique clustered index whereas the unique key creates a unique non-clustered index on the column.
+primary key column doesn’t allow NULL values whereas the unique key column allows only one NULL value.
+
+	
+Foreign key constraints
+in order to create a link between 2 tables ,we must specify a foreign key on one table that refernces a column in another table .
+Foreign key constraints are used for binding two tables with each other than veridy the existance of one table data with other tables
+	
+To Create a Foreign Key Constraint in SQL Server we require the following things
+
+1.We require two tables for binding with each other and those two tables must have a common column for linking the tables.
+2.The common column that is present in both the tables need not have the same name but their data type must be the same.
+3.The common column that is present under the parent table or master table is known as the reference key column and moreover, the reference key column should not contain any duplicate values. So we need to impose either UNIQUE or PRIMARY key constraint on that column.
+4.If we impose the primary key constraint on the reference key column that column will also be the identity column of the table.
+5.The common column which is present in the child or detailed table is known as the Foreign key column and we need to impose a Foreign key constraint on the column which refers to the reference key column of the master table.
+
+CREATE TABLE Dept 
+( 
+    Dno   INT PRIMARY KEY, 
+    Dname VARCHAR(30), 
+    Dloc  CHAR(40) 
+) 
+GO
+
+CREATE TABLE Employee 
+( 
+    Eid    INT PRIMARY KEY, 
+    Ename  VARCHAR(30), 
+    Salary MONEY, 
+    Dno    INT FOREIGN KEY REFERENCES Dept(Dno) 
+) 
+
+Create Foreign key constraint in SQL Server at the column level
+
+CREATE TABLE Employee 
+( 
+    Empid  INT, 
+    Ename  VARCHAR(40), 
+    Job    VARCHAR(30), 
+    Salary MONEY, 
+    Deptno INT CONSTRAINT deptn0_fk REFERENCES Dept(Dno)
+)
+
+create Foreign key Constraint in SQL Server at table level
+
+CREATE TABLE Employee 
+( 
+    Empid  INT, 
+    Ename  VARCHAR(40), 
+    Job    VARCHAR(30), 
+    Salary MONEY, 
+    Deptno INT, 
+    CONSTRAINT deptno_fk FOREIGN KEY (Deptno) REFERENCES Dept(Dno) 
+) 
+
+While creating a Foreign key constraint at table level we need to use explicitly the Foreign key clause whereas it is not required while creating at column-level because the constraint is defined beside the foreign key column only.
+
+--------------------------------------------------------------
+ALL means greater than every value means greater than the maximum value
+ALL Operator in SQL Server can only be used with WHERE and HAVING clauses.
+
+Syntax to use ALL Operator:
+
+SELECT[COLUMN_NAME....| EXPRESSION1]
+FROM [TABLE NAME]
+WHERE EXPRESSION2 COMPARISON_OPERATOR {ALL} (SUBQUERY)
+
+Consider a scenario where we have two tables such as PermanentEmployee and ContractEmployee. Both the tables have the column Age. If we need to get all the records from the PermanentEmployee table where the Age is greater than the maximum value of the Age column in the ContractEmployee table
+----------------------------------------------------------
+SELECT * FROM PermanentEmployee WHERE Age > (SELECT MAX(AGE) FROM ContractEmployee)
+
+ see how to use the All Operator to get the same result
+--------------------------------------------------------
+SELECT * FROM PermanentEmployee WHERE Age > ALL (SELECT AGE FROM ContractEmployee)
+
+IF 4 > ALL (SELECT ID FROM #TEMP_TABLE)
+      PRINT ‘Returned True’
+ELSE
+      PRINT ‘Returned False’
+
+In the above query 4 is greater than all of 1, 2, and 3. So 4, when compared with all of 1, 2, and 3 
+------------------------------------------------------------
+ANY Operator in SQL
+===================
+The ANY Operator in SQL Server is used to compare a value to each value in a list of results from a query and evaluate to true if the result of an inner query contains at least one row
+ANY must match at least one row in the subquery and must be preceded by comparison operators
+For example, greater than (>) with ANY means greater than at least one value
+
+Syntax to use ANY Operator:
+
+SELECT[COLUMN_NAME....| EXPRESSION1]
+FROM [TABLE NAME]
+WHERE EXPRESSION2 COMPARISON_OPERATOR {ANY} (SUBQUERY)
+
+Consider a scenario where we have two tables such as PermanentEmployee and ContractEmployee. Both the tables have the column Age. If you need to get all the records from the PermanentEmployee table where the Age is at-least greater than one value from the Age column of the ContractEmployee table.
+SELECT * FROM PermanentEmployee WHERE Age > ANY (SELECT MIN(Age) FROM ContractEmployee)
+
+Use ANY Operator to get the required results
+ELECT * FROM PermanentEmployee WHERE Age > ANY (SELECT Age FROM ContractEmployee)
+------------------------------------------------------------
+SOME Operator in SQL 
+====================
+The SOME Operator in SQL Server is used to compare a value to each value in a list of results from a query and evaluate to true if the result of an inner query contains at least one row.
+SOME must match at least one row in the subquery and must be preceded by comparison operators
+
+Syntax to use SOME Operator:
+
+SELECT[COLUMN_NAME....| EXPRESSION1]
+FROM [TABLE NAME]
+WHERE EXPRESSION2 COMPARISON_OPERATOR {SOME} (SUBQUERY)
+
+Consider a scenario where we have two tables such as PermanentEmployee and ContractEmployee. Both the tables have the column Age. If you need to get all the records from the PermanentEmployee table where the Age is at-least greater than one value from the Age column of the ContractEmployee table
+
+SELECT * FROM PermanentEmployee WHERE Age > ANY (SELECT MIN(Age) FROM ContractEmployee)
+
+Use SOME Operator to get the required results.
+SELECT * FROM PermanentEmployee WHERE Age > SOME (SELECT Age FROM ContractEmployee)
+-------------------------------------------------------------
+EXISTS Operator in SQL
+======================
+The SQL Server EXISTS operator is used in combination with a subquery and is considered to be met if the subquery returns at least one row. It can be used in a SELECT, INSERT, UPDATE, or DELETE statement.
+
+The EXISTS operator is used to checks the existence of a result of a subquery. Generally, we use this EXISTS operator in the WHERE clause to check whether the subquery is returning results or not. The EXISTS subquery tests whether a subquery fetches at least one-row or not. When no data is returned then this operator return 'FALSE'
+
+Syntax to use EXISTS Operator:
+
+SELECT[COLUMN_NAME....| EXPRESSION1]
+FROM [TABLE NAME]
+WHERE [NOT] EXISTS  (SUBQUERY)
+
+EXISTS Operator With SELECT Statement
+ the EXISTS condition will check and return all records from the EmployeeDetails table where there is at least one record in the EmployeeContactDetails table with a matching employee ID
+SELECT *
+FROM EmployeeDetails
+WHERE EXISTS (SELECT *
+              FROM EmployeeContactDetails
+              WHERE EmployeeDetails.ID = EmployeeContactDetails.EmployeeID);
+
+SELECT Statement using NOT EXISTS
+=================================
+SELECT *
+FROM EmployeeDetails
+WHERE NOT EXISTS (SELECT *
+              FROM EmployeeContactDetails
+              WHERE EmployeeDetails.ID = EmployeeContactDetails.EmployeeID);
+
+------------------------------------------------------------
+
+The SET Operators in SQL Server are mainly used to combine the result of more than 1 select statement and return a single result set to the user.
+There are the following 4 set operators available in SQL
+
+1.UNION: Combine two or more result sets into a single set, without duplicates.
+2.UNION ALL: Combine two or more result sets into a single set, including all duplicates.
+3.INTERSECT: Takes the data from both result sets which are in common.
+4.EXCEPT: Takes the data from the first result set, but not in the second result set (i.e. no matching to each other)
+
+UNION and UNION ALL Operators in SQL
+====================================
+SELECT ID, Name, Gender, Department FROM EmployeeIndia
+UNION ALL
+Select ID, Name, Gender, Department FROM EmployeeUK
+
+SELECT ID, Name, Gender, Department FROM EmployeeIndia
+UNION
+SELECT ID, Name, Gender, Department FROM EmployeeUK
+ORDER BY Name
+------------------------------------------------------------
+EXCEPT operator in SQL
+======================
+The EXCEPT operator in SQL Server is used to return unique rows from the left query which isn’t present in the right query’s results
+
+SELECT ID, Name, Gender, Department FROM EmployeeIndia
+EXCEPT
+SELECT ID, Name, Gender, Department FROM EmployeeUK
+
+EXCEPT Operator in SQL Server on a single table
+-----------------------------------------------
+Select Id, Name, Gender, Salary
+From Employees
+Where Salary >= 50000
+Except
+Select Id, Name, Gender, Salary
+From Employees
+Where Salary >= 60000
+order By Name
